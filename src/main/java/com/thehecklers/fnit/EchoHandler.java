@@ -1,14 +1,24 @@
 package com.thehecklers.fnit;
 
-import com.microsoft.azure.functions.*;
+import com.microsoft.azure.functions.ExecutionContext;
+import com.microsoft.azure.functions.HttpMethod;
+import com.microsoft.azure.functions.HttpRequestMessage;
 import com.microsoft.azure.functions.annotation.AuthorizationLevel;
 import com.microsoft.azure.functions.annotation.FunctionName;
 import com.microsoft.azure.functions.annotation.HttpTrigger;
-import org.springframework.cloud.function.adapter.azure.FunctionInvoker;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.util.Optional;
+import java.util.function.Function;
 
-public class EchoHandler extends FunctionInvoker<String, String> {
+@Component
+public class EchoHandler {
+//public class EchoHandler extends FunctionInvoker<String, String> {
+
+    @Autowired
+    private Function<String, String> echo;
+
     @FunctionName("echo")
 //    public HttpResponseMessage handleItRoy(@HttpTrigger(name = "req",
     public String handleItRoy(@HttpTrigger(name = "req",
@@ -20,7 +30,8 @@ public class EchoHandler extends FunctionInvoker<String, String> {
 //                .body(handleRequest(newString, ctx))
 //                .header("Content-type", "application/json")
 //                .build();
-        return handleRequest(newString, ctx);
 
+//        return handleRequest(newString, ctx);
+        return echo.apply(newString);
     }
 }
